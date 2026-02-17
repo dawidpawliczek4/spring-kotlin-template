@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: spring-kotlin-template-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-spring-kotlin-template}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-kotlin-template-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/spring-kotlin-template
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-postgres}
+      - JWT_SECRET=${JWT_SECRET}
+      - APP_ENCRYPTION_KEY=${APP_ENCRYPTION_KEY} 
+      - APPLE_APN_KEY_BASE64=${APPLE_APN_KEY_BASE64}

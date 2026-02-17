@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: spring-kotlin-template
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring-kotlin-template
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+jwt:
+  issuer: spring-kotlin-template
+  secret: veryhardtoguessveryhardtoguessveryhardtoguessveryhardtoguess
+  access-ttl-seconds: 3600
+  refresh-ttl-seconds: 2592000
+
+app:
+  encryption-key-base64: veryhardtoguessveryhardtoguessveryhardtoguessveryhardtoguess
