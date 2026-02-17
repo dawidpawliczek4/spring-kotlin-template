@@ -79,6 +79,16 @@ The `User` entity is intentionally minimal — it doesn't store email or any pro
 - At least one digit
 - At least one special character
 
+## Rename Project
+
+After cloning, run the rename script to make the template yours:
+
+```bash
+./scripts/rename-project.sh
+```
+
+It will ask for a **project name** (kebab-case, e.g. `my-awesome-app`) and **group** (e.g. `com.mycompany`), then automatically rename everything — package names, directory structure, class names, file names, Gradle config, Docker, database, README, and IntelliJ files.
+
 ## Getting Started
 
 ### Prerequisites
