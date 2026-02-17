@@ -12,6 +12,7 @@ Production-ready starter template for building REST APIs with Spring Boot and Ko
 | ORM | Spring Data JPA / Hibernate |
 | Auth | JWT (jjwt) + BCrypt + SHA-256 hashed refresh tokens |
 | Build | Gradle (Kotlin DSL) |
+| Testing | Testcontainers + JUnit 5 + MockMvc |
 
 ## Project Structure
 
@@ -123,6 +124,29 @@ The database is created automatically by the container (configured in `docker-co
 Flyway will automatically create the `users`, `credentials`, and `refresh_tokens` tables on first startup.
 
 > **Note:** The app uses [spring-dotenv](https://github.com/paulschwarz/spring-dotenv) to load `.env` automatically — no need to export variables manually. All config in `application.yaml` references env vars with `${VAR:default}` syntax.
+
+## Testing
+
+Integration tests run against a real PostgreSQL database using **Testcontainers** — no mocks, no in-memory DB. Docker must be running.
+
+```bash
+./gradlew test
+```
+
+### Test Structure
+
+| Class | What it covers |
+|---|---|
+| `CredentialsControllerTest` | Register (happy path + DB state verification, duplicate email, weak password variants), login (happy path, wrong password, nonexistent email), JWT works on protected endpoint, 403 without token |
+| `SessionControllerTest` | Refresh (happy path, token rotation invalidates old token, invalid token), new access token works on protected endpoint |
+
+### How it works
+
+- **Testcontainers** spins up a PostgreSQL container per test class
+- **`@ServiceConnection`** auto-configures the datasource — no manual URL/credentials needed
+- **Flyway** runs migrations automatically, creating the schema in the test container
+- Tests use **MockMvc** to send real HTTP requests through the full Spring Security filter chain
+- Each test cleans up the DB in `@BeforeEach` for isolation
 
 ## Quick Test
 
