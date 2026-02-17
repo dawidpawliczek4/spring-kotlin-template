@@ -15,11 +15,7 @@ class SessionService(
     private val refreshTokenRepository: RefreshTokenRepository,
     private val jwtIssuer: JwtIssuer
 ) {
-
-    /**
-     * Issues a new access + refresh token pair for the given user.
-     * Called by any auth provider (credentials, Google, Apple) after successful authentication.
-     */
+    
     @Transactional
     fun issueTokens(user: User): TokenResponse {
         val accessToken = jwtIssuer.issueAccessToken(user.id)
@@ -41,9 +37,6 @@ class SessionService(
         )
     }
 
-    /**
-     * Validates and rotates a refresh token — deletes the old one, issues a new pair.
-     */
     @Transactional
     fun refresh(request: RefreshRequest): TokenResponse {
         val hash = hashToken(request.refreshToken)

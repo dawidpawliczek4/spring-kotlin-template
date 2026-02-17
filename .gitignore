@@ -41,3 +41,6 @@ out/
 
 ### PostgreSQL ###
 pgdata/
+
+### Environment ###
+.env
